@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session — May 5 2026 | Claude Hub</title>
+  <script src="../data.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f1f5f9; --surface: #fff; --border: #e2e8f0;
+      --text: #1e293b; --muted: #64748b;
+      --primary: #3b82f6; --primary-dk: #1d4ed8;
+      --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
+      --radius: 12px;
+      --shadow: 0 1px 3px rgba(0,0,0,.10);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+           background: var(--bg); color: var(--text); font-size: 15px; }
+
+    header {
+      background: #0f172a; padding: 0 32px; height: 62px;
+      display: flex; align-items: center; gap: 16px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      color: #94a3b8; text-decoration: none; font-size: 14px;
+      display: flex; align-items: center; gap: 6px;
+      transition: color .15s;
+    }
+    .back-btn:hover { color: #fff; }
+    .header-title { color: #f8fafc; font-weight: 700; font-size: 16px; }
+    .header-date  { color: #475569; font-size: 13px; margin-left: auto; }
+
+    main { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    .page-header { margin-bottom: 36px; }
+    .page-date {
+      font-size: 13px; font-weight: 600; color: var(--primary);
+      text-transform: uppercase; letter-spacing: .6px; margin-bottom: 10px;
+    }
+    .page-title { font-size: 30px; font-weight: 800; line-height: 1.2; margin-bottom: 14px; }
+    .page-summary {
+      font-size: 16px; color: var(--muted); line-height: 1.65;
+      border-left: 4px solid var(--primary); padding-left: 16px;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
+    .tag {
+      background: #eff6ff; color: var(--primary-dk);
+      border: 1px solid #bfdbfe; font-size: 12px; font-weight: 500;
+      padding: 3px 12px; border-radius: 99px;
+    }
+
+    /* ── Sections ────────────────────────────────────────────────────────── */
+    .section { margin-bottom: 36px; }
+    .section-title {
+      font-size: 14px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .7px;
+      margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* findings */
+    .findings-list { display: grid; gap: 10px; }
+    .finding {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 18px; box-shadow: var(--shadow);
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .finding-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .finding-text { font-size: 14px; line-height: 1.55; }
+
+    /* actions */
+    .actions-list { display: grid; gap: 8px; }
+    .action {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 18px; box-shadow: var(--shadow);
+      display: flex; gap: 12px; align-items: center;
+      font-size: 14px;
+    }
+    .action-check {
+      width: 20px; height: 20px; background: #dcfce7;
+      border-radius: 50%; display: grid; place-items: center;
+      color: var(--success); font-size: 12px; flex-shrink: 0;
+    }
+
+    /* apps created */
+    .apps-created { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+    .app-mini {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px 18px; box-shadow: var(--shadow);
+      display: flex; gap: 12px; align-items: center;
+      text-decoration: none; color: inherit;
+      transition: box-shadow .15s, transform .15s;
+    }
+    .app-mini:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .app-mini-icon { font-size: 28px; }
+    .app-mini-name { font-weight: 700; font-size: 14px; }
+    .app-mini-date { font-size: 12px; color: var(--muted); }
+
+    /* commands created */
+    .cmd-created { display: grid; gap: 10px; }
+    .cmd-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 18px; box-shadow: var(--shadow);
+    }
+    .cmd-syntax {
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 15px; font-weight: 700; color: var(--primary-dk);
+      background: #eff6ff; padding: 4px 10px; border-radius: 6px;
+      display: inline-block; margin-bottom: 6px;
+    }
+    .cmd-desc { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+    .cmd-file-lbl {
+      font-size: 12px; margin-top: 6px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="back-btn" href="../index.html">← Claude Hub</a>
+  <span class="header-title" id="hdr-title">Session</span>
+  <span class="header-date"  id="hdr-date"></span>
+</header>
+
+<main>
+  <div class="page-header">
+    <div class="page-date"  id="page-date"></div>
+    <div class="page-title" id="page-title"></div>
+    <div class="page-summary" id="page-summary"></div>
+    <div class="tags" id="page-tags"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🔍 Findings</div>
+    <div class="findings-list" id="findings-list"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">✅ Actions Taken</div>
+    <div class="actions-list" id="actions-list"></div>
+  </div>
+
+  <div class="section" id="apps-section">
+    <div class="section-title">🚀 Apps Created</div>
+    <div class="apps-created" id="apps-created"></div>
+  </div>
+
+  <div class="section" id="cmds-section">
+    <div class="section-title">⌨️ Commands Created</div>
+    <div class="cmd-created" id="cmd-created"></div>
+  </div>
+</main>
+
+<script>
+  // Pull session ID from filename (e.g. 2026-05-05.html)
+  const sessionId = location.pathname.split('/').pop().replace('.html', '');
+  const session   = HUB.sessions.find(s => s.id === sessionId);
+
+  function fmtDate(d) {
+    return new Date(d + 'T00:00:00').toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+  }
+
+  if (!session) {
+    document.querySelector('main').innerHTML = '<p style="padding:40px;color:#64748b">Session not found.</p>';
+  } else {
+    document.title = `Session ${session.date} | Claude Hub`;
+    document.getElementById('hdr-title').textContent  = session.title;
+    document.getElementById('hdr-date').textContent   = fmtDate(session.date);
+    document.getElementById('page-date').textContent  = fmtDate(session.date);
+    document.getElementById('page-title').textContent = session.title;
+    document.getElementById('page-summary').textContent = session.summary;
+    document.getElementById('page-tags').innerHTML =
+      session.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+    // Findings
+    const icons = ['🔴','🟠','🟡','🟢','🔵','🟣'];
+    document.getElementById('findings-list').innerHTML =
+      session.findings.map((f, i) => `
+        <div class="finding">
+          <span class="finding-icon">${icons[i % icons.length]}</span>
+          <span class="finding-text">${f}</span>
+        </div>`).join('');
+
+    // Actions
+    document.getElementById('actions-list').innerHTML =
+      session.actions.map(a => `
+        <div class="action">
+          <span class="action-check">✓</span>
+          ${a}
+        </div>`).join('');
+
+    // Apps created
+    const appsCreated = HUB.apps.filter(a => session.apps.includes(a.id));
+    if (appsCreated.length) {
+      document.getElementById('apps-created').innerHTML = appsCreated.map(a => `
+        <a class="app-mini" href="../${a.file}">
+          <span class="app-mini-icon">${a.icon}</span>
+          <div>
+            <div class="app-mini-name">${a.name}</div>
+            <div class="app-mini-date">Launch →</div>
+          </div>
+        </a>`).join('');
+    } else {
+      document.getElementById('apps-section').style.display = 'none';
+    }
+
+    // Commands created
+    const cmdsCreated = HUB.commands.filter(c => session.commands.includes(c.name));
+    if (cmdsCreated.length) {
+      document.getElementById('cmd-created').innerHTML = cmdsCreated.map(c => `
+        <div class="cmd-item">
+          <span class="cmd-syntax">${c.syntax}</span>
+          <div class="cmd-desc">${c.description}</div>
+          ${c.notes ? `<div class="cmd-desc" style="margin-top:4px;color:#94a3b8">💡 ${c.notes}</div>` : ''}
+          <div class="cmd-file-lbl">${c.file}</div>
+        </div>`).join('');
+    } else {
+      document.getElementById('cmds-section').style.display = 'none';
+    }
+  }
+</script>
+</body>
+</html>
