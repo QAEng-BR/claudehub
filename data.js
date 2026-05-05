@@ -59,6 +59,19 @@ const HUB = {
   // ── APPS ───────────────────────────────────────────────────────────────────
   apps: [
     {
+      id:          "prompt-optimizer",
+      name:        "Prompt Optimizer",
+      description: "Paste any verbose or informal prompt — rewrites it with Claude Haiku into a tight, imperative version that uses fewer tokens. Keeps full history. Also available as terminal command `popt` and as an automatic Claude Code hook.",
+      file:        "apps/prompt-optimizer.html",
+      icon:        "⚡",
+      color:       "#7c3aed",
+      colorLight:  "#ede9fe",
+      created:     "2026-05-05",
+      updatedAt:   "2026-05-05",
+      status:      "active",
+      session:     "2026-05-05"
+    },
+    {
       id:          "finances",
       name:        "Family Finance Dashboard",
       description: "Full family finance tracker (ES/EN). Credit cards with visual display & due-date reminders, recurring bills with paid toggle, home credits with progress, savings accounts in Colombia (COP) and USA (USD), international spending tag, monthly trend chart, CSV + JSON export/import, mobile-first bottom nav (iOS/Android ready). Data in localStorage.",
@@ -98,6 +111,15 @@ const HUB = {
       syntax:      "topmem",
       description: "Lists the 15 biggest processes sorted by RAM usage, showing MB used, PID and process name.",
       notes:       "Alias — no arguments needed.",
+      file:        "~/.zshrc",
+      created:     "2026-05-05",
+      session:     "2026-05-05"
+    },
+    {
+      name:        "popt",
+      syntax:      "popt \"your verbose prompt here\"",
+      description: "Compresses a prompt using Claude Haiku: removes filler words and converts to imperative tone while preserving all technical details. Prints the original vs optimized comparison and copies the result to clipboard.",
+      notes:       "Requires internet. Uses existing Claude Code auth — no API key setup needed. Result auto-copied to clipboard via pbcopy.",
       file:        "~/.zshrc",
       created:     "2026-05-05",
       session:     "2026-05-05"
