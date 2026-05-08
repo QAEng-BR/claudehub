@@ -1078,7 +1078,8 @@ function p2name(){ return currentSession ? currentSession.person2 : 'Natalia'; }
 function getKey(){ return 'claude_finances_v2_'+(currentSession ? currentSession.coupleId : 'default'); }
 
 // ── Couples stored in Firebase so any device can login ───────
-function metaUrl(){ return FIREBASE_URL.replace(/\/?$/,'') + '/meta/couples'; }
+// Usa el path /rooms/_accounts_ que ya tiene reglas abiertas en Firebase
+function metaUrl(){ return FIREBASE_URL.replace(/\/?$/,'') + '/rooms/_accounts_'; }
 
 async function getCoupleList(){
   try{
@@ -1164,7 +1165,8 @@ async function doLogin(){
   var pass = document.getElementById('login-pass').value;
   if(!name||!pass){ showLoginErr('login-error','Completa todos los campos'); return; }
   var couples = await getCoupleList();
-  var couple = couples.find(c=>c.name.toLowerCase()===name.toLowerCase());
+  var nameKey = name.toLowerCase().replace(/\s+/g,'');
+  var couple = couples.find(c=>(c.nameKey||c.name.toLowerCase().replace(/\s+/g,''))===nameKey);
   if(!couple){ showLoginErr('login-error','Pareja no encontrada. ¿Ya tienes cuenta?'); return; }
   if(!await verifyPassword(pass, couple.passwordHash, couple.passwordSalt)){
     showLoginErr('login-error','Contraseña incorrecta'); return;
@@ -1184,11 +1186,12 @@ async function doRegister(){
   var pwErr = validatePassword(pass);
   if(pwErr){ showLoginErr('reg-error', pwErr); return; }
   var couples = await getCoupleList();
-  if(couples.find(c=>c.name.toLowerCase()===name.toLowerCase())){ showLoginErr('reg-error','Ese nombre ya está registrado'); return; }
+  var nameKey = name.toLowerCase().replace(/\s+/g,''); // clave normalizada para comparación
+  if(couples.find(c=>(c.nameKey||c.name.toLowerCase().replace(/\s+/g,''))===nameKey)){ showLoginErr('reg-error','Ese nombre ya está registrado'); return; }
   var salt = genSalt();
   var hash = await hashPassword(pass, salt);
   var id = Date.now().toString(36)+Math.random().toString(36).slice(2);
-  var couple = {id, name, person1:p1, person2:p2, passwordHash:hash, passwordSalt:salt, createdAt:new Date().toISOString()};
+  var couple = {id, name, nameKey, person1:p1, person2:p2, passwordHash:hash, passwordSalt:salt, createdAt:new Date().toISOString()};
   await saveCouple(couple);
   startSession(couple);
 }
@@ -1227,7 +1230,6 @@ function doLogout(){
 }
 
 async function migrateLocalCouplesToFirebase(){
-  // Si hay parejas solo en localStorage pero no en Firebase, las sube
   var local = [];
   try{ local = JSON.parse(localStorage.getItem('fin_couples'))||[]; }catch(e){}
   if(!local.length) return;
@@ -1236,10 +1238,12 @@ async function migrateLocalCouplesToFirebase(){
     if(res.ok){
       var remote = await res.json();
       for(var c of local){
+        if(!c.nameKey) c.nameKey = c.name.toLowerCase().replace(/\s+/g,''); // add nameKey if missing
         if(!remote || !remote[c.id]){
           await fetch(metaUrl()+'/'+c.id+'.json', {method:'PUT', body:JSON.stringify(c)});
         }
       }
+      localStorage.setItem('fin_couples', JSON.stringify(local));
     }
   }catch(e){}
 }
