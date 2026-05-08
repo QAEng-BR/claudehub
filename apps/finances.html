@@ -330,6 +330,16 @@ main{padding:20px;max-width:800px}
 .color-row{display:flex;gap:8px;flex-wrap:wrap}
 .cswatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .15s}
 .cswatch.sel{border-color:var(--primary);transform:scale(1.15)}
+.profile-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
+.profile-section-title{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px}
+.profile-field{display:flex;flex-direction:column;gap:3px;padding:10px 0;border-bottom:1px solid var(--border)}
+.profile-field:last-child{border-bottom:none}
+.profile-field label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.04em}
+.profile-field .pf-val{font-size:15px;color:var(--text);font-weight:500}
+.color-grid{display:flex;gap:12px;flex-wrap:wrap;padding:4px 0}
+.pw-status{font-size:13px;font-weight:500;margin-top:10px;min-height:18px}
+.pw-status.ok{color:var(--income)}
+.pw-status.err{color:var(--expense)}
 .method-section{display:none}
 .method-section.visible{display:block}
 .method-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
@@ -621,6 +631,10 @@ main{padding:20px;max-width:800px}
   <button class="nav-item" onclick="showTab('pending',this)">
     <span class="nav-ico">⏳</span><span class="nav-label" data-t="pendingIncome">Ing. Pendientes</span>
   </button>
+  <div class="nav-section-label">Cuenta</div>
+  <button class="nav-item" onclick="showTab('profile',this)">
+    <span class="nav-ico">◉</span><span class="nav-label">Perfil</span>
+  </button>
 </nav>
 
 <div id="app" style="display:none">
@@ -727,6 +741,57 @@ main{padding:20px;max-width:800px}
   <div id="tab-sav-goals" style="display:none">
     <div class="data-bar"><button class="data-btn" onclick="openModal('modal-goal')">➕ <span data-t="addGoal">Nueva meta</span></button></div>
     <div id="goals-list"></div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="section" id="sec-profile">
+  <div class="profile-card">
+    <div class="profile-section-title">Cuenta</div>
+    <div class="profile-field">
+      <label>Nombre de pareja</label>
+      <div class="pf-val" id="pf-couple-name">—</div>
+    </div>
+    <div class="profile-field">
+      <label>Persona 1</label>
+      <div class="pf-val" id="pf-p1">—</div>
+    </div>
+    <div class="profile-field">
+      <label>Persona 2</label>
+      <div class="pf-val" id="pf-p2">—</div>
+    </div>
+  </div>
+
+  <div class="profile-card">
+    <div class="profile-section-title">Cambiar contraseña</div>
+    <div class="field-group">
+      <label class="field-label">Contraseña actual</label>
+      <input type="password" class="input" id="pw-current" placeholder="••••••••">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Nueva contraseña</label>
+      <input type="password" class="input" id="pw-new" placeholder="••••••••">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Confirmar nueva contraseña</label>
+      <input type="password" class="input" id="pw-confirm" placeholder="••••••••">
+    </div>
+    <button class="submit-btn" onclick="changePassword()" style="margin-top:14px">Cambiar contraseña</button>
+    <div class="pw-status" id="pw-status"></div>
+  </div>
+
+  <div class="profile-card">
+    <div class="profile-section-title">Color de interfaz</div>
+    <div class="color-grid" id="theme-color-grid">
+      <div class="cswatch" style="background:#10E0C6" data-color="#10E0C6" onclick="setThemeColor('#10E0C6',this)" title="Teal"></div>
+      <div class="cswatch" style="background:#3b82f6" data-color="#3b82f6" onclick="setThemeColor('#3b82f6',this)" title="Blue"></div>
+      <div class="cswatch" style="background:#8b5cf6" data-color="#8b5cf6" onclick="setThemeColor('#8b5cf6',this)" title="Purple"></div>
+      <div class="cswatch" style="background:#27C376" data-color="#27C376" onclick="setThemeColor('#27C376',this)" title="Green"></div>
+      <div class="cswatch" style="background:#F5A623" data-color="#F5A623" onclick="setThemeColor('#F5A623',this)" title="Orange"></div>
+      <div class="cswatch" style="background:#f472b6" data-color="#f472b6" onclick="setThemeColor('#f472b6',this)" title="Pink"></div>
+      <div class="cswatch" style="background:#FF1654" data-color="#FF1654" onclick="setThemeColor('#FF1654',this)" title="Red"></div>
+      <div class="cswatch" style="background:#06b6d4" data-color="#06b6d4" onclick="setThemeColor('#06b6d4',this)" title="Cyan"></div>
+    </div>
   </div>
 </div>
 
@@ -1071,7 +1136,7 @@ main{padding:20px;max-width:800px}
 
 <script>
 // ─── Auth ───
-const APP_VERSION = '1.4.0';
+const APP_VERSION = '1.5.0';
 
 // ── Firebase pre-config (Option A) ──────────────────────────
 const FIREBASE_URL = 'https://familiafinance071201-default-rtdb.firebaseio.com/';
@@ -1270,6 +1335,7 @@ function showApp(){
   document.getElementById('hdr-couple-name').textContent = currentSession.coupleName + ' · v' + APP_VERSION;
   populatePersonSelects();
   applyTranslations();
+  applyThemeColor();
   renderColorPicker();
   renderAll();
   // Auto-sync via pre-configured Firebase (Option A)
@@ -2600,7 +2666,63 @@ function renderPendingIncome(){
 function renderAll(){
   updateMonthLabel();renderReminders();renderDashboard();
   renderCards();renderTx();renderBills();renderCredits();renderSavings();
-  renderGoals();renderHiddenExp();renderPendingIncome();
+  renderGoals();renderHiddenExp();renderPendingIncome();renderProfile();
+}
+
+// ─── Profile ───
+function renderProfile(){
+  if(!currentSession) return;
+  document.getElementById('pf-couple-name').textContent = currentSession.coupleName;
+  document.getElementById('pf-p1').textContent = currentSession.person1;
+  document.getElementById('pf-p2').textContent = currentSession.person2;
+  var saved = (localStorage.getItem('fin_theme_color') || '#10E0C6').toLowerCase();
+  document.querySelectorAll('#theme-color-grid .cswatch').forEach(function(el){
+    el.classList.toggle('sel', el.dataset.color.toLowerCase() === saved);
+  });
+}
+
+async function changePassword(){
+  var current = document.getElementById('pw-current').value;
+  var nw = document.getElementById('pw-new').value;
+  var confirm = document.getElementById('pw-confirm').value;
+  var status = document.getElementById('pw-status');
+  status.className = 'pw-status';
+  if(!current || !nw || !confirm){ status.textContent='Completa todos los campos'; status.classList.add('err'); return; }
+  if(nw !== confirm){ status.textContent='Las contraseñas nuevas no coinciden'; status.classList.add('err'); return; }
+  var pwErr = validatePassword(nw);
+  if(pwErr){ status.textContent=pwErr; status.classList.add('err'); return; }
+  status.textContent='Verificando…';
+  var couples = await getCoupleList();
+  var couple = couples.find(function(c){ return c.id===currentSession.coupleId; });
+  if(!couple){ status.textContent='Error: pareja no encontrada'; status.classList.add('err'); return; }
+  if(!await verifyPassword(current, couple.passwordHash, couple.passwordSalt)){
+    status.textContent='Contraseña actual incorrecta'; status.classList.add('err'); return;
+  }
+  var salt = genSalt();
+  var hash = await hashPassword(nw, salt);
+  couple.passwordHash = hash;
+  couple.passwordSalt = salt;
+  await saveCouple(couple);
+  status.textContent='✅ Contraseña actualizada'; status.classList.add('ok');
+  document.getElementById('pw-current').value='';
+  document.getElementById('pw-new').value='';
+  document.getElementById('pw-confirm').value='';
+}
+
+function setThemeColor(color, el){
+  document.documentElement.style.setProperty('--primary', color);
+  document.documentElement.style.setProperty('--accent', color);
+  localStorage.setItem('fin_theme_color', color);
+  document.querySelectorAll('#theme-color-grid .cswatch').forEach(function(s){ s.classList.remove('sel'); });
+  if(el) el.classList.add('sel');
+}
+
+function applyThemeColor(){
+  var color = localStorage.getItem('fin_theme_color');
+  if(color){
+    document.documentElement.style.setProperty('--primary', color);
+    document.documentElement.style.setProperty('--accent', color);
+  }
 }
 
 // ─── Init ───
