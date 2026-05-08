@@ -388,14 +388,194 @@ main{padding:20px;max-width:800px}
   .toast{bottom:calc(56px + var(--sab) + 14px)}
   .toast{bottom:calc(56px + var(--sab) + 14px)}
 }
+
+/* ── LOGIN SCREEN ── */
+#login-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+}
+#login-screen.hidden{display:none}
+.login-card{
+  width:100%;max-width:400px;
+  background:var(--surface);
+  border:1px solid var(--border-2);
+  border-radius:18px;
+  padding:32px 28px 28px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.5);
+}
+.login-brand{text-align:center;margin-bottom:28px}
+.login-brand-ico{font-size:36px;margin-bottom:8px}
+.login-brand-title{font-size:20px;font-weight:600;color:var(--text);letter-spacing:-0.02em}
+.login-brand-sub{font-size:12px;color:var(--text-3);margin-top:3px}
+.login-tabs{display:flex;background:rgba(255,255,255,0.05);border-radius:8px;padding:3px;margin-bottom:24px;gap:3px}
+.login-tab{flex:1;border:none;background:none;color:var(--text-2);font-size:13px;font-weight:500;padding:8px 4px;border-radius:6px;cursor:pointer;font-family:var(--font);transition:all .18s}
+.login-tab.active{background:var(--primary);color:#0a1929;font-weight:600}
+.login-form{display:none}
+.login-form.active{display:block}
+.login-field{margin-bottom:14px}
+.login-field label{display:block;font-size:11px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px}
+.login-field input{
+  width:100%;background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-size:14px;font-family:var(--font);
+  padding:10px 12px;outline:none;transition:border-color .18s;
+}
+.login-field input:focus{border-color:var(--primary)}
+.login-field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.login-btn{
+  width:100%;margin-top:6px;
+  background:var(--primary);color:#0a1929;
+  border:none;border-radius:9px;
+  font-size:14px;font-weight:700;font-family:var(--font);
+  padding:12px;cursor:pointer;letter-spacing:-0.01em;
+  transition:opacity .18s;
+}
+.login-btn:hover{opacity:.88}
+.login-error{
+  background:rgba(255,22,84,0.15);color:#FF1654;
+  border-radius:7px;padding:8px 12px;font-size:12px;
+  margin-bottom:12px;display:none;
+}
+.login-error.show{display:block}
+.logout-btn{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  color:var(--text-2);border-radius:6px;padding:4px 9px;
+  font-size:11px;font-weight:500;cursor:pointer;min-height:32px;font-family:var(--font);
+}
+.logout-btn:hover{color:#FF1654;border-color:rgba(255,22,84,0.4)}
+.login-brand-ico{cursor:default;user-select:none}
+.login-footer{text-align:center;margin-top:16px}
+.login-footer a{font-size:11px;color:var(--text-3);cursor:pointer;text-decoration:none}
+.login-footer a:hover{color:var(--text-2)}
+/* ── ADMIN MODAL ── */
+#admin-modal{
+  display:none;position:fixed;inset:0;z-index:10000;
+  background:rgba(0,0,0,0.7);
+  align-items:center;justify-content:center;padding:20px;
+}
+#admin-modal.active{display:flex}
+.admin-card{
+  width:100%;max-width:460px;
+  background:#111d2c;
+  border:1px solid rgba(255,22,84,0.3);
+  border-radius:16px;padding:28px 24px 24px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.7);
+  max-height:90vh;overflow-y:auto;
+}
+.admin-title{font-size:15px;font-weight:600;color:#FF1654;margin-bottom:4px}
+.admin-sub{font-size:12px;color:var(--text-3);margin-bottom:20px}
+.admin-setup-hint{background:rgba(16,224,198,0.1);border-radius:7px;padding:8px 12px;font-size:11px;color:#10E0C6;margin-bottom:14px}
+.admin-err{background:rgba(255,22,84,0.15);color:#FF1654;border-radius:7px;padding:8px 12px;font-size:12px;margin-bottom:12px;display:none}
+.admin-field{margin-bottom:12px}
+.admin-field label{display:block;font-size:11px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.admin-field input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:var(--font);padding:10px 12px;outline:none}
+.admin-field input:focus{border-color:#FF1654}
+.admin-btn-row{display:flex;gap:8px;margin-top:4px}
+.admin-login-btn{flex:1;background:#FF1654;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;font-family:var(--font);padding:11px;cursor:pointer}
+.admin-close-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text-2);border-radius:8px;font-size:13px;font-family:var(--font);padding:11px 16px;cursor:pointer}
+.admin-section-title{font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.admin-couple-row{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;margin-bottom:8px;
+}
+.admin-couple-info{flex:1;min-width:0}
+.admin-couple-name{font-size:13px;font-weight:600;color:var(--text)}
+.admin-couple-meta{font-size:12px;color:var(--text-2);margin-top:1px}
+.admin-couple-id{font-size:10px;color:var(--text-3);font-family:var(--mono);margin-top:3px;word-break:break-all}
+.admin-del-btn{flex-shrink:0;background:rgba(255,22,84,0.15);border:1px solid rgba(255,22,84,0.3);color:#FF1654;border-radius:7px;font-size:12px;font-weight:500;font-family:var(--font);padding:6px 12px;cursor:pointer}
+.admin-del-btn:hover{background:rgba(255,22,84,0.3)}
+.admin-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.admin-stat{background:rgba(255,255,255,0.04);border-radius:8px;padding:10px 12px;text-align:center}
+.admin-stat-val{font-size:22px;font-weight:700;color:var(--primary)}
+.admin-stat-lbl{font-size:11px;color:var(--text-3);margin-top:2px}
 </style>
 </head>
 <body>
 
-<header>
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-brand-ico" onclick="adminIconClick()">💸</div>
+      <div class="login-brand-title">Finanzas Familiares</div>
+      <div class="login-brand-sub">Tu espacio privado de finanzas en pareja</div>
+    </div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchLoginTab('login')">Iniciar sesión</button>
+      <button class="login-tab" onclick="switchLoginTab('register')">Registrarse</button>
+    </div>
+    <!-- Login form -->
+    <div class="login-form active" id="form-login">
+      <div class="login-error" id="login-error"></div>
+      <div class="login-field"><label>Nombre de la pareja</label><input type="text" id="login-couple" placeholder="Ej: Brahian & Natalia" autocomplete="username"></div>
+      <div class="login-field"><label>Contraseña</label><input type="password" id="login-pass" placeholder="••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="login-btn" onclick="doLogin()">Entrar</button>
+    </div>
+    <!-- Register form -->
+    <div class="login-form" id="form-register">
+      <div class="login-error" id="reg-error"></div>
+      <div class="login-field"><label>Nombre de la pareja</label><input type="text" id="reg-couple" placeholder="Ej: Carlos & María" autocomplete="off"></div>
+      <div class="login-field-row">
+        <div class="login-field"><label>Persona 1</label><input type="text" id="reg-p1" placeholder="Carlos" autocomplete="off"></div>
+        <div class="login-field"><label>Persona 2</label><input type="text" id="reg-p2" placeholder="María" autocomplete="off"></div>
+      </div>
+      <div class="login-field"><label>Contraseña</label><input type="password" id="reg-pass" placeholder="Mínimo 4 caracteres" autocomplete="new-password"></div>
+      <div class="login-field"><label>Confirmar contraseña</label><input type="password" id="reg-pass2" placeholder="Repite la contraseña" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"></div>
+      <button class="login-btn" onclick="doRegister()">Crear cuenta</button>
+    </div>
+    <div class="login-footer"><a onclick="openAdminModal()">· · ·</a></div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div id="admin-modal">
+  <div class="admin-card">
+    <div class="admin-title">Panel de Administración</div>
+    <div class="admin-sub">Acceso exclusivo · Gestión de usuarios</div>
+    <div id="admin-login-form">
+      <div class="admin-setup-hint" id="admin-setup-hint">Primera y única configuración: ingresa el código secreto del código fuente para crear la contraseña de admin.</div>
+      <div class="admin-err" id="admin-err"></div>
+      <!-- Campo solo visible en primera configuración -->
+      <div class="admin-field" id="admin-setup-code-row">
+        <label>Código de configuración</label>
+        <input type="password" id="admin-setup-code" placeholder="Código secreto (solo en el código fuente)" autocomplete="off">
+      </div>
+      <!-- Siempre visible -->
+      <div class="admin-field">
+        <label id="admin-pass-label">Contraseña admin</label>
+        <input type="password" id="admin-pass-input" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminLogin()">
+      </div>
+      <!-- Solo visible en primera configuración -->
+      <div class="admin-field" id="admin-confirm-row">
+        <label>Confirmar contraseña</label>
+        <input type="password" id="admin-pass-confirm" placeholder="Repite la contraseña" autocomplete="new-password" onkeydown="if(event.key==='Enter')adminLogin()">
+      </div>
+      <div class="admin-btn-row">
+        <button class="admin-login-btn" onclick="adminLogin()">Entrar</button>
+        <button class="admin-close-btn" onclick="closeAdminModal()">Cancelar</button>
+      </div>
+    </div>
+    <div id="admin-panel-content" style="display:none">
+      <div class="admin-stats">
+        <div class="admin-stat"><div class="admin-stat-val" id="admin-stat-count">0</div><div class="admin-stat-lbl">Parejas</div></div>
+        <div class="admin-stat"><div class="admin-stat-val" id="admin-stat-sync">—</div><div class="admin-stat-lbl">Firebase</div></div>
+      </div>
+      <div class="admin-section-title">Parejas registradas</div>
+      <div id="admin-couples-list"></div>
+      <div style="margin-top:16px">
+        <button class="admin-close-btn" style="width:100%" onclick="closeAdminModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header id="app-header" style="display:none">
   <div>
     <div class="hdr-logo" id="hdr-title">Finanzas Familiares</div>
-    <div class="hdr-sub">Brahian &amp; Natalia</div>
+    <div class="hdr-sub" id="hdr-couple-name">—</div>
   </div>
   <div class="hdr-right">
     <div class="month-nav">
@@ -405,13 +585,14 @@ main{padding:20px;max-width:800px}
     </div>
     <button class="lang-btn" onclick="toggleLang()" id="lang-btn">EN</button>
     <button class="sync-btn" onclick="openModal('modal-sync')" id="sync-btn">☁️</button>
+    <button class="logout-btn" onclick="doLogout()" title="Cerrar sesión">⏻</button>
   </div>
 </header>
 
-<div id="reminders-bar"></div>
+<div id="reminders-bar" style="display:none"></div>
 
 <!-- SIDEBAR -->
-<nav id="sidebar">
+<nav id="sidebar" style="display:none">
   <div class="sidebar-toggle">
     <button onclick="toggleSidebar()" id="toggle-btn" title="Colapsar">←</button>
   </div>
@@ -438,7 +619,7 @@ main{padding:20px;max-width:800px}
   </button>
 </nav>
 
-<div id="app">
+<div id="app" style="display:none">
 <main>
 
 <!-- DASHBOARD -->
@@ -789,8 +970,8 @@ main{padding:20px;max-width:800px}
       <div class="field"><label>Firebase Database URL</label><input type="url" id="sync-url" placeholder="https://tu-proyecto-rtdb.firebaseio.com"></div>
       <div class="field"><label>Código familiar</label><input type="text" id="sync-room" placeholder="brahian-natalia-2024"></div>
       <div id="sync-status" style="font-size:13px;color:var(--text-2);min-height:18px"></div>
-      <button class="submit-btn" onclick="saveSync()">Activar sincronización</button>
-      <button style="width:100%;padding:11px;background:none;border:1px solid var(--border);border-radius:8px;font-size:14px;color:var(--text-2);cursor:pointer;font-family:var(--font);min-height:44px;margin-top:-4px" onclick="disableSync()">Desactivar</button>
+      <button id="sync-save-btn" class="submit-btn" onclick="saveSync()">Activar sincronización</button>
+      <button id="sync-dis-btn" style="width:100%;padding:11px;background:none;border:1px solid var(--border);border-radius:8px;font-size:14px;color:var(--text-2);cursor:pointer;font-family:var(--font);min-height:44px;margin-top:-4px" onclick="disableSync()">Desactivar</button>
     </div>
   </div>
 </div>
@@ -878,6 +1059,293 @@ main{padding:20px;max-width:800px}
 <div class="toast" id="toast"></div>
 
 <script>
+// ─── Auth ───
+// ── Firebase pre-config (Option A) ──────────────────────────
+const FIREBASE_URL = 'https://familiafinance071201-default-rtdb.firebaseio.com/';
+// ────────────────────────────────────────────────────────────
+
+// ── Admin setup code — se hashea en boot y el texto se borra de memoria ──
+let _ADMIN_CODE_RAW = 'FamiliaFinance#2024!Admin';
+let ADMIN_SETUP_HASH = null; // se rellena al inicio con SHA-256 del código
+
+let currentSession = null; // {coupleId,coupleName,person1,person2,p1id,p2id}
+
+function p1id(){ return currentSession ? currentSession.p1id : 'brahian'; }
+function p2id(){ return currentSession ? currentSession.p2id : 'natalia'; }
+function p1name(){ return currentSession ? currentSession.person1 : 'Brahian'; }
+function p2name(){ return currentSession ? currentSession.person2 : 'Natalia'; }
+function getKey(){ return 'claude_finances_v2_'+(currentSession ? currentSession.coupleId : 'default'); }
+
+function getCoupleList(){
+  try{ return JSON.parse(localStorage.getItem('fin_couples'))||[]; }catch(e){ return []; }
+}
+
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function genSalt(){ return Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join(''); }
+
+async function sha256hex(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function hashPassword(pw, salt){
+  // PBKDF2-SHA256, 200k iterations — resistente a ataques de fuerza bruta offline
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), {name:'PBKDF2'}, false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({name:'PBKDF2', salt:new TextEncoder().encode(salt), iterations:200000, hash:'SHA-256'}, key, 256);
+  return Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function verifyPassword(pw, storedHash, storedSalt){
+  if(storedSalt){
+    return await hashPassword(pw, storedSalt) === storedHash;
+  }
+  // Compatibilidad hacia atrás: contraseña vieja con SHA-256 sin sal
+  return await sha256hex(pw) === storedHash;
+}
+
+async function migratePasswordIfNeeded(pw, couple){
+  if(couple.passwordSalt) return; // Ya usa PBKDF2
+  var salt = genSalt();
+  var hash = await hashPassword(pw, salt);
+  var list = getCoupleList();
+  var idx = list.findIndex(c=>c.id===couple.id);
+  if(idx>=0){ list[idx].passwordHash=hash; list[idx].passwordSalt=salt; localStorage.setItem('fin_couples', JSON.stringify(list)); }
+}
+
+function validatePassword(pw){
+  if(pw.length < 8)          return 'Mínimo 8 caracteres';
+  if(!/[a-zA-Z]/.test(pw))  return 'Debe incluir al menos una letra';
+  if(!/[0-9]/.test(pw))     return 'Debe incluir al menos un número';
+  return null;
+}
+
+function switchLoginTab(tab){
+  document.querySelectorAll('.login-tab').forEach((b,i)=>b.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register')));
+  document.getElementById('form-login').classList.toggle('active', tab==='login');
+  document.getElementById('form-register').classList.toggle('active', tab==='register');
+  document.getElementById('login-error').classList.remove('show');
+  document.getElementById('reg-error').classList.remove('show');
+}
+
+function showLoginErr(id, msg){ var el=document.getElementById(id); el.textContent=msg; el.classList.add('show'); }
+
+async function doLogin(){
+  var name = document.getElementById('login-couple').value.trim();
+  var pass = document.getElementById('login-pass').value;
+  if(!name||!pass){ showLoginErr('login-error','Completa todos los campos'); return; }
+  var couples = getCoupleList();
+  var couple = couples.find(c=>c.name.toLowerCase()===name.toLowerCase());
+  if(!couple){ showLoginErr('login-error','Pareja no encontrada. ¿Ya tienes cuenta?'); return; }
+  if(!await verifyPassword(pass, couple.passwordHash, couple.passwordSalt)){
+    showLoginErr('login-error','Contraseña incorrecta'); return;
+  }
+  await migratePasswordIfNeeded(pass, couple); // migra SHA-256 → PBKDF2 silenciosamente
+  startSession(couple);
+}
+
+async function doRegister(){
+  var name  = document.getElementById('reg-couple').value.trim();
+  var p1    = document.getElementById('reg-p1').value.trim();
+  var p2    = document.getElementById('reg-p2').value.trim();
+  var pass  = document.getElementById('reg-pass').value;
+  var pass2 = document.getElementById('reg-pass2').value;
+  if(!name||!p1||!p2||!pass){ showLoginErr('reg-error','Completa todos los campos'); return; }
+  if(pass!==pass2){ showLoginErr('reg-error','Las contraseñas no coinciden'); return; }
+  var pwErr = validatePassword(pass);
+  if(pwErr){ showLoginErr('reg-error', pwErr); return; }
+  var couples = getCoupleList();
+  if(couples.find(c=>c.name.toLowerCase()===name.toLowerCase())){ showLoginErr('reg-error','Ese nombre ya está registrado'); return; }
+  var salt = genSalt();
+  var hash = await hashPassword(pass, salt);
+  var id = Date.now().toString(36)+Math.random().toString(36).slice(2);
+  var couple = {id, name, person1:p1, person2:p2, passwordHash:hash, passwordSalt:salt, createdAt:new Date().toISOString()};
+  couples.push(couple);
+  localStorage.setItem('fin_couples', JSON.stringify(couples));
+  startSession(couple);
+}
+
+function startSession(couple){
+  var session = {
+    coupleId: couple.id,
+    coupleName: couple.name,
+    person1: couple.person1,
+    person2: couple.person2,
+    p1id: couple.person1.toLowerCase().trim(),
+    p2id: couple.person2.toLowerCase().trim()
+  };
+  localStorage.setItem('fin_session', JSON.stringify(session));
+  currentSession = session;
+  var newKey = 'claude_finances_v2_'+couple.id;
+  if(!localStorage.getItem(newKey)){
+    var oldData = localStorage.getItem('claude_finances_v2');
+    if(oldData) localStorage.setItem(newKey, oldData);
+  }
+  showApp();
+}
+
+function doLogout(){
+  localStorage.removeItem('fin_session');
+  currentSession = null;
+  if(fbRef){try{fbRef.off();fbApp.delete();}catch(e){}}
+  fbRef=null;fbApp=null;
+  document.getElementById('app-header').style.display='none';
+  document.getElementById('app').style.display='none';
+  document.getElementById('sidebar').style.display='none';
+  document.getElementById('reminders-bar').style.display='none';
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-error').classList.remove('show');
+}
+
+function showApp(){
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('app-header').style.display='flex';
+  document.getElementById('app').style.display='';
+  document.getElementById('sidebar').style.display='flex';
+  document.getElementById('reminders-bar').style.display='';
+  document.getElementById('hdr-couple-name').textContent = currentSession.coupleName;
+  populatePersonSelects();
+  applyTranslations();
+  renderColorPicker();
+  renderAll();
+  // Auto-sync via pre-configured Firebase (Option A)
+  if(FIREBASE_URL && !FIREBASE_URL.includes('TU_FIREBASE')){
+    initSync({url: FIREBASE_URL, room: currentSession.coupleId});
+    // Lock sync modal — fields are read-only so no couple can touch another's room
+    document.getElementById('sync-url').value = FIREBASE_URL;
+    document.getElementById('sync-room').value = currentSession.coupleId;
+    document.getElementById('sync-url').readOnly = true;
+    document.getElementById('sync-room').readOnly = true;
+    var syncSaveBtn = document.getElementById('sync-save-btn');
+    var syncDisBtn  = document.getElementById('sync-dis-btn');
+    if(syncSaveBtn) syncSaveBtn.style.display = 'none';
+    if(syncDisBtn)  syncDisBtn.style.display  = 'none';
+  } else {
+    var sc=getSyncCfg();
+    if(sc){ document.getElementById('sync-url').value=sc.url||''; document.getElementById('sync-room').value=sc.room||''; initSync(sc); }
+  }
+}
+
+function populatePersonSelects(){
+  var opts3 = '<option value="'+p1id()+'">'+p1name()+'</option><option value="'+p2id()+'">'+p2name()+'</option><option value="shared">Compartido</option>';
+  var opts2 = '<option value="'+p1id()+'">'+p1name()+'</option><option value="'+p2id()+'">'+p2name()+'</option>';
+  ['f-person','cc-owner','bill-owner','sav-owner','pend-person'].forEach(function(id){ var el=document.getElementById(id); if(el) el.innerHTML=opts3; });
+  var hp=document.getElementById('hidden-person'); if(hp) hp.innerHTML=opts2;
+}
+
+// ── Admin Panel ──────────────────────────────────────────────
+var adminAuth = false;
+var adminClickCount = 0;
+var adminClickTimer = null;
+
+function adminIconClick(){
+  adminClickCount++;
+  clearTimeout(adminClickTimer);
+  adminClickTimer = setTimeout(function(){ adminClickCount=0; }, 2000);
+  if(adminClickCount >= 5){ adminClickCount=0; openAdminModal(); }
+}
+
+function openAdminModal(){
+  adminAuth = false;
+  document.getElementById('admin-panel-content').style.display='none';
+  document.getElementById('admin-login-form').style.display='block';
+  document.getElementById('admin-pass-input').value='';
+  document.getElementById('admin-err').textContent='';
+  document.getElementById('admin-err').style.display='none';
+  var stored = localStorage.getItem('fin_admin_hash');
+  var isFirstTime = !stored;
+  document.getElementById('admin-setup-hint').style.display     = isFirstTime ? 'block' : 'none';
+  document.getElementById('admin-setup-code-row').style.display = isFirstTime ? 'block' : 'none';
+  document.getElementById('admin-confirm-row').style.display    = isFirstTime ? 'block' : 'none';
+  document.getElementById('admin-pass-label').textContent       = isFirstTime ? 'Nueva contraseña admin' : 'Contraseña admin';
+  document.getElementById('admin-pass-input').placeholder       = isFirstTime ? 'Mín. 8 chars, letra y número' : '••••••••';
+  document.getElementById('admin-modal').classList.add('active');
+}
+
+function closeAdminModal(){
+  document.getElementById('admin-modal').classList.remove('active');
+  adminAuth=false;
+}
+
+async function adminLogin(){
+  var pass = document.getElementById('admin-pass-input').value;
+  if(!pass){ showAdminErr('Ingresa la contraseña'); return; }
+  var rawStored = localStorage.getItem('fin_admin_hash');
+  var stored = null;
+  try{ stored = rawStored ? JSON.parse(rawStored) : null; }catch(e){ stored = null; }
+
+  if(!stored){
+    // Primera y única vez — requiere código de configuración hasheado en boot
+    var setupInput = document.getElementById('admin-setup-code').value;
+    if(await sha256hex(setupInput) !== ADMIN_SETUP_HASH){ showAdminErr('Código de configuración incorrecto'); return; }
+    var pwErr = validatePassword(pass);
+    if(pwErr){ showAdminErr(pwErr); return; }
+    if(pass !== document.getElementById('admin-pass-confirm').value){ showAdminErr('Las contraseñas no coinciden'); return; }
+    var salt = genSalt();
+    var hash = await hashPassword(pass, salt);
+    localStorage.setItem('fin_admin_hash', JSON.stringify({hash, salt}));
+    adminAuth = true;
+  } else {
+    var ok = stored.salt
+      ? await hashPassword(pass, stored.salt) === stored.hash
+      : await sha256hex(pass) === stored; // compatibilidad legada
+    if(!ok){ showAdminErr('Contraseña incorrecta'); return; }
+    // Migrar admin legado a PBKDF2
+    if(!stored.salt){
+      var salt = genSalt();
+      localStorage.setItem('fin_admin_hash', JSON.stringify({hash: await hashPassword(pass, salt), salt}));
+    }
+    adminAuth = true;
+  }
+  document.getElementById('admin-login-form').style.display='none';
+  document.getElementById('admin-panel-content').style.display='block';
+  renderAdminPanel();
+}
+
+function showAdminErr(msg){
+  var el = document.getElementById('admin-err');
+  el.textContent = msg; el.style.display='block';
+}
+
+function renderAdminPanel(){
+  if(!adminAuth) return;
+  var couples = getCoupleList();
+  var statCount = document.getElementById('admin-stat-count');
+  var statSync  = document.getElementById('admin-stat-sync');
+  if(statCount) statCount.textContent = couples.length;
+  if(statSync)  statSync.textContent  = (FIREBASE_URL && !FIREBASE_URL.includes('TU_FIREBASE')) ? '✅' : '—';
+  var el = document.getElementById('admin-couples-list');
+  if(!couples.length){ el.innerHTML='<div style="color:var(--text-3);font-size:13px;text-align:center;padding:20px">Sin parejas registradas</div>'; return; }
+  el.innerHTML = couples.map(function(c){
+    var date = c.createdAt ? new Date(c.createdAt).toLocaleDateString('es-CO') : '—';
+    return '<div class="admin-couple-row">'+
+      '<div class="admin-couple-info">'+
+        '<div class="admin-couple-name">'+esc(c.name)+'</div>'+
+        '<div class="admin-couple-meta">'+esc(c.person1)+' &amp; '+esc(c.person2)+'</div>'+
+        '<div class="admin-couple-id">Room: '+c.id+' · '+date+'</div>'+
+      '</div>'+
+      '<button class="admin-del-btn" onclick="adminDeleteCouple(\''+c.id+'\')">Eliminar</button>'+
+    '</div>';
+  }).join('');
+}
+
+function adminDeleteCouple(id){
+  if(!adminAuth) return;
+  var couples = getCoupleList();
+  var couple = couples.find(c=>c.id===id);
+  if(!couple) return;
+  if(!confirm('¿Eliminar la pareja "'+couple.name+'" y TODOS sus datos? Esta acción no se puede deshacer.')) return;
+  var updated = couples.filter(c=>c.id!==id);
+  localStorage.setItem('fin_couples', JSON.stringify(updated));
+  localStorage.removeItem('claude_finances_v2_'+id);
+  if(currentSession && currentSession.coupleId===id) doLogout();
+  renderAdminPanel();
+  toast('Pareja eliminada');
+}
+
+// escHtml → use esc() defined at top of auth module
+
 // ─── i18n ───
 const T={
   es:{
@@ -977,7 +1445,6 @@ const CARD_COLORS={
 };
 
 // ─── State ───
-const KEY='claude_finances_v2';
 let lang=localStorage.getItem('fin_lang')||'es';
 let viewMonth=new Date().getMonth();
 let viewYear=new Date().getFullYear();
@@ -996,10 +1463,8 @@ const DEFAULT={transactions:[],creditCards:[],bills:[],homeCredits:[],savings:[]
 // ─── Core helpers ───
 function loadData(){
   try{
-    const r=localStorage.getItem(KEY);
+    const r=localStorage.getItem(getKey());
     if(r) return Object.assign({},DEFAULT,JSON.parse(r));
-    const v1=localStorage.getItem('claude_finances_v1');
-    if(v1){const d=JSON.parse(v1);return Object.assign({},DEFAULT,{transactions:d.transactions||[]});}
   }catch(e){}
   return Object.assign({},DEFAULT);
 }
@@ -1011,7 +1476,7 @@ let remoteWritePending=false;
 
 function persistData(d){
   d._lastUpdated=Date.now();
-  localStorage.setItem(KEY,JSON.stringify(d));
+  localStorage.setItem(getKey(),JSON.stringify(d));
   if(fbRef){
     remoteWritePending=true;
     fbRef.set(d).catch(function(){setSyncIcon('error');}).finally(function(){remoteWritePending=false;});
@@ -1116,13 +1581,13 @@ function renderReminders(){
   var chips=[];
   data.creditCards.forEach(function(c){
     var d=daysUntilDay(c.dueDay);
-    if(d<=7) chips.push('<span class="reminder-chip '+(d<=2?'chip-urgent':'chip-warn')+'">Tarjeta: '+c.name+' · '+dueLabel(d)+'</span>');
+    if(d<=7) chips.push('<span class="reminder-chip '+(d<=2?'chip-urgent':'chip-warn')+'">Tarjeta: '+esc(c.name)+' · '+dueLabel(d)+'</span>');
   });
   var mk=monthKey();
   data.bills.forEach(function(b){
     if(!b.paidDates||!b.paidDates.includes(mk)){
       var d=daysUntilDay(b.dueDay);
-      if(d<=7) chips.push('<span class="reminder-chip '+(d<=2?'chip-urgent':'chip-warn')+'">'+b.name+' · '+dueLabel(d)+'</span>');
+      if(d<=7) chips.push('<span class="reminder-chip '+(d<=2?'chip-urgent':'chip-warn')+'">'+esc(b.name)+' · '+dueLabel(d)+'</span>');
     }
   });
   data.homeCredits.forEach(function(c){
@@ -1130,7 +1595,7 @@ function renderReminders(){
       var today=new Date();today.setHours(0,0,0,0);
       var next=new Date(c.nextPaymentDate+'T00:00:00');
       var d=Math.round((next-today)/86400000);
-      if(d<=7) chips.push('<span class="reminder-chip '+(d<=2?'chip-urgent':'chip-warn')+'">'+c.name+' · '+dueLabel(d)+'</span>');
+      if(d<=7) chips.push('<span class="reminder-chip '+(d<=2?'chip-urgent':'chip-warn')+'">'+esc(c.name)+' · '+dueLabel(d)+'</span>');
     }
   });
   bar.innerHTML=chips.join('');
@@ -1207,7 +1672,7 @@ function renderCards(){
     var grad=CARD_COLORS[c.color||'navy'];
     return '<div class="cc-wrap">'+
       '<div class="cc-visual" style="background:'+grad+'">'+
-        '<div class="cc-top"><span class="cc-bank">'+c.name+'</span><span class="cc-net">'+(c.network||'VISA')+'</span></div>'+
+        '<div class="cc-top"><span class="cc-bank">'+esc(c.name)+'</span><span class="cc-net">'+esc(c.network||'VISA')+'</span></div>'+
         '<div><div class="cc-bal-lbl">Saldo</div><div class="cc-bal-val">'+fmtMoney(c.balance,c.currency)+'</div>'+
         '<div class="cc-bar"><div class="cc-bar-fill" style="width:'+pct+'%"></div></div></div>'+
         '<div class="cc-bot"><span class="cc-num">···· '+(c.lastFour||'????')+'</span>'+
@@ -1227,7 +1692,7 @@ function renderCards(){
   document.getElementById('cc-summary').innerHTML=data.creditCards.length
     ?'<div class="card"><div class="card-body">'+data.creditCards.map(function(c){
         return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">'+
-          '<span style="font-size:13px;font-weight:500">···· '+(c.lastFour||'??')+' '+c.name+'</span>'+
+          '<span style="font-size:13px;font-weight:500">···· '+esc(c.lastFour||'??')+' '+esc(c.name)+'</span>'+
           '<span style="font-weight:500;color:var(--expense)">'+fmtMoney(c.balance,c.currency)+'</span></div>';
       }).join('')+
       '<div style="display:flex;justify-content:space-between;padding:10px 0 0;font-weight:500;font-size:13px">'+
@@ -1363,7 +1828,7 @@ function buildMethodGrid(){
   var data=loadData();
   var html='<button class="method-opt '+(selectedMethod==='cash'?'selected':'')+'" data-method="cash" onclick="selectMethod(this)">Efectivo</button>';
   data.creditCards.forEach(function(c){
-    html+='<button class="method-opt '+(selectedMethod===c.id?'selected':'')+'" data-method="'+c.id+'" onclick="selectMethod(this)">···· '+(c.lastFour||'??')+' '+c.name+'</button>';
+    html+='<button class="method-opt '+(selectedMethod===c.id?'selected':'')+'" data-method="'+c.id+'" onclick="selectMethod(this)">···· '+esc(c.lastFour||'??')+' '+esc(c.name)+'</button>';
   });
   document.getElementById('method-grid').innerHTML=html;
 }
@@ -1416,7 +1881,7 @@ function delTx(id){
 }
 function txCard(tx){
   var c=CAT[tx.category]||{e:'📦',l:{es:'Otro',en:'Other'}};
-  var pb=tx.person==='brahian'?'pb-b':tx.person==='natalia'?'pb-n':'pb-s';
+  var pb=tx.person===p1id()?'pb-b':tx.person===p2id()?'pb-n':'pb-s';
   var pn=tx.person==='shared'?tr('shared'):(tx.person.charAt(0).toUpperCase()+tx.person.slice(1));
   var pmLabel='';
   if(tx.type==='expense'){
@@ -1431,7 +1896,7 @@ function txCard(tx){
   return '<div class="tx-item">'+
     '<div class="tx-ico-wrap '+(tx.type==='income'?'ico-inc':'ico-exp')+'">'+c.e+'</div>'+
     '<div class="tx-info">'+
-      '<div class="tx-desc">'+tx.description+(tx.isInternational?'<span class="intl-tag">intl</span>':'')+'</div>'+
+      '<div class="tx-desc">'+esc(tx.description)+(tx.isInternational?'<span class="intl-tag">intl</span>':'')+'</div>'+
       '<div class="tx-meta"><span class="pbadge '+pb+'">'+pn+'</span> · '+fmtDate(tx.date)+' · '+(c.l[lang]||c.l.es)+' '+pmLabel+'</div>'+
     '</div>'+
     '<div class="tx-right"><div class="tx-amt '+(tx.type)+'">'+(tx.type==='income'?'+':'-')+fmtMoney(tx.amount,tx.currency||'USD')+'</div></div>'+
@@ -1443,13 +1908,13 @@ function renderTx(){
   var search=document.getElementById('tx-search').value.toLowerCase();
   var mk=monthKey();
   var txs=data.transactions.filter(function(tx){return tx.date.startsWith(mk);});
-  if(txFilter==='brahian') txs=txs.filter(function(tx){return tx.person==='brahian';});
-  else if(txFilter==='natalia') txs=txs.filter(function(tx){return tx.person==='natalia';});
+  if(txFilter===p1id()) txs=txs.filter(function(tx){return tx.person===p1id();});
+  else if(txFilter===p2id()) txs=txs.filter(function(tx){return tx.person===p2id();});
   else if(txFilter==='shared') txs=txs.filter(function(tx){return tx.person==='shared';});
   else if(txFilter==='intl') txs=txs.filter(function(tx){return tx.isInternational;});
   if(search) txs=txs.filter(function(tx){return tx.description.toLowerCase().includes(search)||(CAT[tx.category]?.l[lang]||'').toLowerCase().includes(search);});
   txs.sort(function(a,b){return b.date.localeCompare(a.date);});
-  var filters=[{k:'all',l:'Todos'},{k:'brahian',l:'Brahian'},{k:'natalia',l:'Natalia'},{k:'shared',l:tr('shared')},{k:'intl',l:'Internacional'}];
+  var filters=[{k:'all',l:'Todos'},{k:p1id(),l:p1name()},{k:p2id(),l:p2name()},{k:'shared',l:tr('shared')},{k:'intl',l:'Internacional'}];
   document.getElementById('tx-filters').innerHTML=filters.map(function(f){
     return '<button class="tx-filter '+(txFilter===f.k?'active':'')+'" onclick="setTxFilter(\''+f.k+'\')">'+f.l+'</button>';
   }).join('');
@@ -1499,7 +1964,7 @@ function renderBills(){
     var days=daysUntilDay(b.dueDay);
     return '<div class="bill-item">'+
       '<span class="bill-ico">'+(cats[b.category]||'📦')+'</span>'+
-      '<div class="bill-info"><div class="bill-name">'+b.name+'</div>'+
+      '<div class="bill-info"><div class="bill-name">'+esc(b.name)+'</div>'+
       '<div class="bill-meta">'+fmtMoney(b.amount,b.currency)+' · día '+b.dueDay+' · '+dueLabel(days)+'</div></div>'+
       '<button class="bill-paid '+(paid?'paid':'')+'" onclick="toggleBill(\''+b.id+'\')">'+(paid?'Pagado':'Pendiente')+'</button>'+
       '<button class="item-del" onclick="delBill(\''+b.id+'\')">✕</button>'+
@@ -1535,7 +2000,7 @@ function renderCredits(){
   el.innerHTML=data.homeCredits.map(function(c){
     var pct=c.originalAmount>0?Math.round((1-c.currentBalance/c.originalAmount)*100):0;
     return '<div class="credit-item">'+
-      '<div class="credit-top"><div><div class="credit-name">'+c.name+'</div><div class="credit-bank">'+(c.bank||'')+'</div></div>'+
+      '<div class="credit-top"><div><div class="credit-name">'+esc(c.name)+'</div><div class="credit-bank">'+esc(c.bank||'')+'</div></div>'+
       '<button class="item-del" onclick="delCredit(\''+c.id+'\')">✕</button></div>'+
       '<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>'+
       '<div style="font-size:11px;color:var(--text-3);margin-bottom:8px">'+pct+'% pagado</div>'+
@@ -1616,14 +2081,14 @@ function renderSavings(){
     var totalUSD=accs.reduce(function(s,a){return s+toUSD(a.balance,a.currency);},0);
     var flag=country==='colombia'?'🇨🇴':'🇺🇸';
     var accsHTML=accs.map(function(a){
-      var pb=a.owner==='brahian'?'pb-b':a.owner==='natalia'?'pb-n':'pb-s';
+      var pb=a.owner===p1id()?'pb-b':a.owner===p2id()?'pb-n':'pb-s';
       var pn=a.owner==='shared'?tr('shared'):(a.owner.charAt(0).toUpperCase()+a.owner.slice(1));
       var usd=toUSD(a.balance,a.currency);
       var tl=T[lang].savType&&T[lang].savType[a.type||'cuenta']?T[lang].savType[a.type||'cuenta']:'Cuenta';
       var ico=icons[a.type||'cuenta']||'📦';
       return '<div class="sav-acct">'+
         '<span class="sav-ico">'+ico+'</span>'+
-        '<div class="sav-info"><div class="sav-acct-name">'+a.name+'</div>'+
+        '<div class="sav-info"><div class="sav-acct-name">'+esc(a.name)+'</div>'+
         '<div class="sav-acct-owner"><span class="pbadge '+pb+'">'+pn+'</span></div>'+
         '<span class="sav-acct-type">'+tl+'</span></div>'+
         '<div class="sav-bal"><span class="sav-bal-val">'+fmtMoney(a.balance,a.currency)+'</span>'+
@@ -1794,7 +2259,7 @@ function renderGoals(){
         <div style="flex:1;min-width:0">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px">
             <div>
-              <div class="goal-name">${g.emoji||'🎯'} ${g.name}</div>
+              <div class="goal-name">${esc(g.emoji||'🎯')} ${esc(g.name)}</div>
               <div class="goal-amounts">${fmtMoney(g.current||0,g.currency)} / ${fmtMoney(g.target,g.currency)}</div>
             </div>
             <button class="goal-del" onclick="delGoal('${g.id}')">✕</button>
@@ -1858,8 +2323,8 @@ function renderHiddenExp(){
   const all      = (data.hiddenExpenses||[]).filter(h=>h.monthKey===mk);
   const released = isReleased(mk);
   const rd       = releaseDay(mk);
-  const bAdded   = all.some(h=>h.person==='brahian');
-  const nAdded   = all.some(h=>h.person==='natalia');
+  const bAdded   = all.some(h=>h.person===p1id());
+  const nAdded   = all.some(h=>h.person===p2id());
 
   bannerEl.innerHTML = `<div class="hidden-banner">
     <div class="hidden-banner-title">${released?'🔓 ¡Gastos revelados!':'🔒 Gastos Ocultos'}</div>
@@ -1867,12 +2332,12 @@ function renderHiddenExp(){
     <div class="hidden-status">
       <div class="hidden-person-stat">
         <div class="hs-icon">${bAdded?'✅':'⏳'}</div>
-        <div class="hs-name">Brahian</div>
+        <div class="hs-name">${p1name()}</div>
         <div class="hs-status">${bAdded?(lang==='es'?'Agregado':'Added'):(lang==='es'?'Pendiente':'Pending')}</div>
       </div>
       <div class="hidden-person-stat">
         <div class="hs-icon">${nAdded?'✅':'⏳'}</div>
-        <div class="hs-name">Natalia</div>
+        <div class="hs-name">${p2name()}</div>
         <div class="hs-status">${nAdded?(lang==='es'?'Agregada':'Added'):(lang==='es'?'Pendiente':'Pending')}</div>
       </div>
     </div>
@@ -1882,12 +2347,12 @@ function renderHiddenExp(){
     listEl.innerHTML=`<div class="empty"><div class="empty-ico">🎁</div>${tr('noHiddenExp')}</div>`; return;
   }
   listEl.innerHTML = all.map(h=>{
-    const pb = h.person==='brahian'?'pb-b':'pb-n';
+    const pb = h.person===p1id()?'pb-b':'pb-n';
     const pn = h.person.charAt(0).toUpperCase()+h.person.slice(1);
     return `<div class="hidden-item">
       <span class="hidden-lock">${released?'🎁':'🔒'}</span>
       <div class="hidden-info">
-        <div class="hidden-name">${released?h.description:'• • • • • • •'}</div>
+        <div class="hidden-name">${released?esc(h.description):'• • • • • • •'}</div>
         <div class="hidden-meta"><span class="pbadge ${pb}">${pn}</span> · ${fmtDate(h.date)}</div>
       </div>
       <div style="text-align:right">
@@ -1912,7 +2377,7 @@ function initSync(cfg){
       if(remote&&!remoteWritePending){
         var local=loadData();
         if((remote._lastUpdated||0)>=(local._lastUpdated||0)){
-          localStorage.setItem(KEY,JSON.stringify(remote));renderAll();
+          localStorage.setItem(getKey(),JSON.stringify(remote));renderAll();
         }
       }
       setSyncIcon('ok');
@@ -2004,13 +2469,13 @@ function renderPendingIncome(){
     listEl.innerHTML='<div class="empty"><div class="empty-ico">📥</div>'+tr('noPending')+'</div>';return;
   }
   listEl.innerHTML=items.map(function(p){
-    var pb=p.person==='brahian'?'pb-b':p.person==='natalia'?'pb-n':'pb-s';
+    var pb=p.person===p1id()?'pb-b':p.person===p2id()?'pb-n':'pb-s';
     var pn=p.person==='shared'?tr('shared'):(p.person.charAt(0).toUpperCase()+p.person.slice(1));
     var overdue=!p.received&&p.expectedDate<new Date().toISOString().split('T')[0];
     return '<div class="pending-item'+(p.received?' pending-done':'')+'">'+
       '<span class="pending-icon">'+(p.received?'✅':overdue?'⚠️':'📥')+'</span>'+
       '<div class="pending-info">'+
-        '<div class="pending-desc">'+p.description+'</div>'+
+        '<div class="pending-desc">'+esc(p.description)+'</div>'+
         '<div class="pending-meta"><span class="pbadge '+pb+'">'+pn+'</span> · '+fmtDate(p.expectedDate)+(p.received?' · <span style="color:var(--income)">'+tr('markReceived')+'</span>':overdue?' · <span style="color:var(--expense)">'+(lang==='es'?'Vencido':'Overdue')+'</span>':'')+'</div>'+
       '</div>'+
       '<div class="pending-right">'+
@@ -2037,16 +2502,23 @@ document.getElementById('cr-next').value       = new Date().toISOString().split(
 document.getElementById('goal-add-date').value = new Date().toISOString().split('T')[0];
 document.getElementById('pend-date').value      = new Date().toISOString().split('T')[0];
 document.getElementById('lang-btn').textContent = lang==='es'?'EN':'ES';
-document.getElementById('hdr-title').textContent = tr('appName');
-applyTranslations();
-renderColorPicker();
-renderAll();
-var sc=getSyncCfg();
-if(sc){
-  document.getElementById('sync-url').value=sc.url||'';
-  document.getElementById('sync-room').value=sc.room||'';
-  initSync(sc);
-}
+
+// Boot: hash the admin setup code and clear plaintext from variable
+sha256hex(_ADMIN_CODE_RAW).then(function(h){ ADMIN_SETUP_HASH = h; _ADMIN_CODE_RAW = null; });
+
+// Check for existing session or ?admin param
+(function(){
+  if(new URLSearchParams(window.location.search).get('admin')!==null){ openAdminModal(); return; }
+  try{
+    var stored = JSON.parse(localStorage.getItem('fin_session'));
+    if(stored && stored.coupleId){
+      currentSession = stored;
+      showApp();
+      return;
+    }
+  }catch(e){}
+  // No session — show login screen (already visible by default)
+})();
 </script>
 </body>
 </html>
