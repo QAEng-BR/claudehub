@@ -1077,8 +1077,37 @@ function p1name(){ return currentSession ? currentSession.person1 : 'Brahian'; }
 function p2name(){ return currentSession ? currentSession.person2 : 'Natalia'; }
 function getKey(){ return 'claude_finances_v2_'+(currentSession ? currentSession.coupleId : 'default'); }
 
-function getCoupleList(){
+// ── Couples stored in Firebase so any device can login ───────
+function metaUrl(){ return FIREBASE_URL.replace(/\/?$/,'') + '/meta/couples'; }
+
+async function getCoupleList(){
+  try{
+    var res = await fetch(metaUrl()+'.json');
+    if(res.ok){
+      var data = await res.json();
+      if(data){
+        var list = Object.values(data);
+        localStorage.setItem('fin_couples', JSON.stringify(list)); // cache local
+        return list;
+      }
+    }
+  }catch(e){}
+  // Fallback: caché local (offline / Firebase no disponible)
   try{ return JSON.parse(localStorage.getItem('fin_couples'))||[]; }catch(e){ return []; }
+}
+
+async function saveCouple(couple){
+  var list = await getCoupleList();
+  var idx = list.findIndex(c=>c.id===couple.id);
+  if(idx>=0) list[idx]=couple; else list.push(couple);
+  localStorage.setItem('fin_couples', JSON.stringify(list));
+  try{ await fetch(metaUrl()+'/'+couple.id+'.json', {method:'PUT', body:JSON.stringify(couple)}); }catch(e){}
+}
+
+async function deleteCouple(id){
+  var list = (await getCoupleList()).filter(c=>c.id!==id);
+  localStorage.setItem('fin_couples', JSON.stringify(list));
+  try{ await fetch(metaUrl()+'/'+id+'.json', {method:'DELETE'}); }catch(e){}
 }
 
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -1108,10 +1137,9 @@ async function verifyPassword(pw, storedHash, storedSalt){
 async function migratePasswordIfNeeded(pw, couple){
   if(couple.passwordSalt) return; // Ya usa PBKDF2
   var salt = genSalt();
-  var hash = await hashPassword(pw, salt);
-  var list = getCoupleList();
-  var idx = list.findIndex(c=>c.id===couple.id);
-  if(idx>=0){ list[idx].passwordHash=hash; list[idx].passwordSalt=salt; localStorage.setItem('fin_couples', JSON.stringify(list)); }
+  couple.passwordHash = await hashPassword(pw, salt);
+  couple.passwordSalt = salt;
+  await saveCouple(couple);
 }
 
 function validatePassword(pw){
@@ -1135,13 +1163,13 @@ async function doLogin(){
   var name = document.getElementById('login-couple').value.trim();
   var pass = document.getElementById('login-pass').value;
   if(!name||!pass){ showLoginErr('login-error','Completa todos los campos'); return; }
-  var couples = getCoupleList();
+  var couples = await getCoupleList();
   var couple = couples.find(c=>c.name.toLowerCase()===name.toLowerCase());
   if(!couple){ showLoginErr('login-error','Pareja no encontrada. ¿Ya tienes cuenta?'); return; }
   if(!await verifyPassword(pass, couple.passwordHash, couple.passwordSalt)){
     showLoginErr('login-error','Contraseña incorrecta'); return;
   }
-  await migratePasswordIfNeeded(pass, couple); // migra SHA-256 → PBKDF2 silenciosamente
+  await migratePasswordIfNeeded(pass, couple);
   startSession(couple);
 }
 
@@ -1155,14 +1183,13 @@ async function doRegister(){
   if(pass!==pass2){ showLoginErr('reg-error','Las contraseñas no coinciden'); return; }
   var pwErr = validatePassword(pass);
   if(pwErr){ showLoginErr('reg-error', pwErr); return; }
-  var couples = getCoupleList();
+  var couples = await getCoupleList();
   if(couples.find(c=>c.name.toLowerCase()===name.toLowerCase())){ showLoginErr('reg-error','Ese nombre ya está registrado'); return; }
   var salt = genSalt();
   var hash = await hashPassword(pass, salt);
   var id = Date.now().toString(36)+Math.random().toString(36).slice(2);
   var couple = {id, name, person1:p1, person2:p2, passwordHash:hash, passwordSalt:salt, createdAt:new Date().toISOString()};
-  couples.push(couple);
-  localStorage.setItem('fin_couples', JSON.stringify(couples));
+  await saveCouple(couple);
   startSession(couple);
 }
 
@@ -1199,7 +1226,26 @@ function doLogout(){
   document.getElementById('login-error').classList.remove('show');
 }
 
+async function migrateLocalCouplesToFirebase(){
+  // Si hay parejas solo en localStorage pero no en Firebase, las sube
+  var local = [];
+  try{ local = JSON.parse(localStorage.getItem('fin_couples'))||[]; }catch(e){}
+  if(!local.length) return;
+  try{
+    var res = await fetch(metaUrl()+'.json');
+    if(res.ok){
+      var remote = await res.json();
+      for(var c of local){
+        if(!remote || !remote[c.id]){
+          await fetch(metaUrl()+'/'+c.id+'.json', {method:'PUT', body:JSON.stringify(c)});
+        }
+      }
+    }
+  }catch(e){}
+}
+
 function showApp(){
+  migrateLocalCouplesToFirebase(); // sube cuentas viejas de localStorage a Firebase silenciosamente
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('app-header').style.display='flex';
   document.getElementById('app').style.display='';
@@ -1309,9 +1355,9 @@ function showAdminErr(msg){
   el.textContent = msg; el.style.display='block';
 }
 
-function renderAdminPanel(){
+async function renderAdminPanel(){
   if(!adminAuth) return;
-  var couples = getCoupleList();
+  var couples = await getCoupleList();
   var statCount = document.getElementById('admin-stat-count');
   var statSync  = document.getElementById('admin-stat-sync');
   if(statCount) statCount.textContent = couples.length;
@@ -1331,14 +1377,13 @@ function renderAdminPanel(){
   }).join('');
 }
 
-function adminDeleteCouple(id){
+async function adminDeleteCouple(id){
   if(!adminAuth) return;
-  var couples = getCoupleList();
+  var couples = await getCoupleList();
   var couple = couples.find(c=>c.id===id);
   if(!couple) return;
   if(!confirm('¿Eliminar la pareja "'+couple.name+'" y TODOS sus datos? Esta acción no se puede deshacer.')) return;
-  var updated = couples.filter(c=>c.id!==id);
-  localStorage.setItem('fin_couples', JSON.stringify(updated));
+  await deleteCouple(id);
   localStorage.removeItem('claude_finances_v2_'+id);
   if(currentSession && currentSession.coupleId===id) doLogout();
   renderAdminPanel();
