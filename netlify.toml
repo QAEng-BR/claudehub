@@ -1,0 +1,7 @@
+[build]
+  publish = "apps"
+
+[[redirects]]
+  from = "/"
+  to = "/finances.html"
+  status = 200
