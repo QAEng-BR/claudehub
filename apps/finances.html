@@ -53,7 +53,10 @@ header{
   border-bottom:1px solid rgba(255,255,255,0.06);
 }
 .hdr-logo{color:#f1f0ee;font-weight:600;font-size:14px;letter-spacing:-0.01em;white-space:nowrap}
-.hdr-sub{color:#475569;font-size:11px;margin-top:1px}
+.hdr-sub{color:#94a3b8;font-size:13px;font-weight:500;margin-top:2px}
+.trend-period-bar{display:flex;gap:4px;margin-left:auto}
+.trend-period-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:#64748b;border-radius:5px;font-size:11px;font-weight:500;padding:3px 9px;cursor:pointer;font-family:var(--font);transition:all .15s}
+.trend-period-btn.active{background:var(--primary);border-color:var(--primary);color:#0a1929}
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:6px}
 .month-nav{display:flex;align-items:center;background:rgba(255,255,255,0.06);border-radius:7px;overflow:hidden;border:1px solid rgba(255,255,255,0.08)}
 .month-nav button{background:none;border:none;color:#64748b;cursor:pointer;padding:6px 10px;font-size:14px;touch-action:manipulation;min-height:36px}
@@ -646,7 +649,14 @@ main{padding:20px;max-width:800px}
     </div>
   </div>
   <div class="card">
-    <div class="card-head"><span data-t="trend">Tendencia 6 meses</span></div>
+    <div class="card-head">
+      <span id="trend-title">Tendencia</span>
+      <div class="trend-period-bar">
+        <button class="trend-period-btn" onclick="setTrendPeriod('week')">Semana</button>
+        <button class="trend-period-btn" onclick="setTrendPeriod('month')">Mes</button>
+        <button class="trend-period-btn active" onclick="setTrendPeriod('6m')">6 Meses</button>
+      </div>
+    </div>
     <div class="card-body"><div class="chart-wrap"><canvas id="trend-chart"></canvas></div></div>
   </div>
   <div class="sec-lbl" data-t="recent">Últimos movimientos</div>
@@ -1061,7 +1071,7 @@ main{padding:20px;max-width:800px}
 
 <script>
 // ─── Auth ───
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.4.0';
 
 // ── Firebase pre-config (Option A) ──────────────────────────
 const FIREBASE_URL = 'https://familiafinance071201-default-rtdb.firebaseio.com/';
@@ -1506,6 +1516,7 @@ let movingAccId=null;
 let moveType='deposit';
 let billsSubTab='bills';
 let trendChart=null;
+let trendPeriod='6m';
 let selectedMethod='cash';
 let txCurType='income';
 let sidebarCollapsed=false;
@@ -1682,16 +1693,62 @@ function renderDashboard(){
   document.getElementById('recent-tx').innerHTML=recent.length?recent.map(txCard).join(''):'<div class="empty"><div class="empty-ico">—</div>'+tr('noTx')+'</div>';
 }
 
+function setTrendPeriod(p){
+  trendPeriod=p;
+  document.querySelectorAll('.trend-period-btn').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('onclick').includes("'"+p+"'"));
+  });
+  var data=loadData();
+  renderTrendChart(data);
+}
+
 function renderTrendChart(data){
-  var months=[];
-  for(var i=5;i>=0;i--){
-    var d=new Date(viewYear,viewMonth-i,1);
-    var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-    var lbl=T[lang].months[d.getMonth()];
-    var inc=data.transactions.filter(function(tx){return tx.type==='income'&&tx.date.startsWith(k);}).reduce(function(s,tx){return s+tx.amount;},0);
-    var exp=data.transactions.filter(function(tx){return tx.type==='expense'&&tx.date.startsWith(k);}).reduce(function(s,tx){return s+tx.amount;},0);
-    months.push({lbl:lbl,inc:inc,exp:exp});
+  var points=[];
+
+  if(trendPeriod==='week'){
+    // Últimos 7 días
+    var today=new Date(viewYear,viewMonth,new Date().getDate());
+    for(var i=6;i>=0;i--){
+      var d=new Date(today); d.setDate(d.getDate()-i);
+      var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+      var lbl=String(d.getDate())+' '+T[lang].months[d.getMonth()];
+      var inc=data.transactions.filter(function(tx){return tx.type==='income'&&tx.date===k;}).reduce(function(s,tx){return s+tx.amount;},0);
+      var exp=data.transactions.filter(function(tx){return tx.type==='expense'&&tx.date===k;}).reduce(function(s,tx){return s+tx.amount;},0);
+      points.push({lbl:lbl,inc:inc,exp:exp});
+    }
+    document.getElementById('trend-title').textContent='Últimos 7 días';
+  } else if(trendPeriod==='month'){
+    // Semanas del mes actual
+    var year=viewYear, mon=viewMonth;
+    var daysInMonth=new Date(year,mon+1,0).getDate();
+    var mk=year+'-'+String(mon+1).padStart(2,'0');
+    for(var w=1;w<=4;w++){
+      var dayFrom=(w-1)*7+1, dayTo=Math.min(w*7,daysInMonth);
+      var lbl=(lang==='es'?'Sem ':'Wk ')+w;
+      var inc=data.transactions.filter(function(tx){
+        if(tx.type!=='income'||!tx.date.startsWith(mk)) return false;
+        var day=parseInt(tx.date.slice(8),10); return day>=dayFrom&&day<=dayTo;
+      }).reduce(function(s,tx){return s+tx.amount;},0);
+      var exp=data.transactions.filter(function(tx){
+        if(tx.type!=='expense'||!tx.date.startsWith(mk)) return false;
+        var day=parseInt(tx.date.slice(8),10); return day>=dayFrom&&day<=dayTo;
+      }).reduce(function(s,tx){return s+tx.amount;},0);
+      points.push({lbl:lbl,inc:inc,exp:exp});
+    }
+    document.getElementById('trend-title').textContent=T[lang].months[viewMonth]+' '+viewYear;
+  } else {
+    // 6 meses (default)
+    for(var i=5;i>=0;i--){
+      var d=new Date(viewYear,viewMonth-i,1);
+      var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+      var lbl=T[lang].months[d.getMonth()];
+      var inc=data.transactions.filter(function(tx){return tx.type==='income'&&tx.date.startsWith(k);}).reduce(function(s,tx){return s+tx.amount;},0);
+      var exp=data.transactions.filter(function(tx){return tx.type==='expense'&&tx.date.startsWith(k);}).reduce(function(s,tx){return s+tx.amount;},0);
+      points.push({lbl:lbl,inc:inc,exp:exp});
+    }
+    document.getElementById('trend-title').textContent=lang==='es'?'Tendencia 6 meses':'6-month trend';
   }
+
   var ctx=document.getElementById('trend-chart').getContext('2d');
   if(trendChart) trendChart.destroy();
   var incGrad=ctx.createLinearGradient(0,0,0,180);
@@ -1702,9 +1759,9 @@ function renderTrendChart(data){
   expGrad.addColorStop(1,'rgba(255,22,84,0.05)');
   trendChart=new Chart(ctx,{
     type:'bar',
-    data:{labels:months.map(function(m){return m.lbl;}),datasets:[
-      {label:tr('income'),data:months.map(function(m){return m.inc;}),backgroundColor:incGrad,borderColor:'#27C376',borderWidth:1.5,borderRadius:5},
-      {label:tr('expense'),data:months.map(function(m){return m.exp;}),backgroundColor:expGrad,borderColor:'#FF1654',borderWidth:1.5,borderRadius:5}
+    data:{labels:points.map(function(m){return m.lbl;}),datasets:[
+      {label:tr('income'),data:points.map(function(m){return m.inc;}),backgroundColor:incGrad,borderColor:'#27C376',borderWidth:1.5,borderRadius:5},
+      {label:tr('expense'),data:points.map(function(m){return m.exp;}),backgroundColor:expGrad,borderColor:'#FF1654',borderWidth:1.5,borderRadius:5}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'top',labels:{color:'#8fadc7',font:{size:11},padding:8,boxWidth:10}}},
